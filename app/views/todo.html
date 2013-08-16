@@ -1,0 +1,45 @@
+<h2>ToDos</h2>
+<table class="table table-striped">
+  <tr>
+    <th ng-click="order = 'task'; sort = !sort">Task</th>
+    <th ng-click="order = 'prio'; sort = !sort">Prio</th>
+    <th></th>
+    <th></th>
+  </tr>
+  <tr ng-repeat="todo in todos | orderBy: order:sort">
+    <td>
+      <span ng-show="!todo.edit">{{todo.task}}</span>
+      <span ng-show="todo.edit">
+        <input type="text" class="form-control" ng-model="todo.task" />
+      </span>
+    </td>
+    <td>
+      <span ng-show="!todo.edit">{{todo.prio}}</span>
+      <span ng-show="todo.edit">
+        <input type="number" class="form-control" ng-model="todo.prio" />
+      </span>
+    </td>
+    <td>
+      <span ng-show="!todo.edit">
+        <a ng-click="edit(todo)"><span class="glyphicon glyphicon-pencil" /></a>
+      </span>
+      <span ng-show="todo.edit">
+        <a ng-click="save(todo)"><span class="glyphicon glyphicon-ok" /></a>
+      </span>
+    </td>
+    <td>
+      <a ng-click="delete(todo)"><span class="glyphicon glyphicon-remove" /></a>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <input type="text" class="form-control" ng-model="newtodo.task" />
+    </td>
+    <td>
+      <input type="number" class="form-control" ng-model="newtodo.prio" />
+    </td>
+    <td colspan="2">
+      <a ng-click="add(newtodo)"><span class="glyphicon glyphicon-plus" /></a>
+    </td>
+  </tr>
+</table>

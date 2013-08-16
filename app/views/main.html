@@ -1,0 +1,20 @@
+<h2>Login</h2>
+<form role="form" name="loginForm" novalidate="">
+  <div class="form-group" ng-class="{'has-error': loginForm.email.$invalid && loginForm.email.$dirty}">
+    <label for="email">Email</label>
+    <input type="email" ng-model="user.email" class="form-control" name="email" id="email" placeholder="Email" required="required" />
+    <div ng-show="loginForm.email.$dirty" class="text-danger">
+      <span ng-show="loginForm.email.$error.required">Please fill out your email address.</span>
+      <span ng-show="loginForm.email.$error.email">Please enter a valid email address.</span>
+    </div>
+  </div>
+  <div class="form-group" ng-class="{'has-error': loginForm.pw.$invalid && loginForm.pw.$dirty}">
+    <label for="pw">Password</label>
+    <input type="password" ng-model="user.pw" class="form-control" name="pw" id="pw" placeholder="Password" required="required" />
+    <p class="text-danger">
+      <span ng-show="loginForm.pw.$dirty && loginForm.pw.$error.required">Please enter a password.</span>
+    </p>
+  </div>
+  <button ng-click="login(user)" ng-disabled="loginForm.$invalid" class="btn btn-primary">Sign in</button>
+  <a href="#/register" class="btn btn-default">Register</a>
+</form>

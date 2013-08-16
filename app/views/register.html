@@ -1,0 +1,27 @@
+<h2>Register</h2>
+<form role="form" name="registerForm" novalidate="">
+  <div class="form-group" ng-class="{'has-error': registerForm.email.$invalid && registerForm.email.$dirty}">
+    <label for="email">Email</label>
+    <input type="email" ng-model="user.email" class="form-control" name="email" id="email" placeholder="Email" required="required" />
+    <div ng-show="registerForm.email.$dirty" class="text-danger">
+      <span ng-show="registerForm.email.$error.required">Please fill out your email address.</span>
+      <span ng-show="registerForm.email.$error.email">Please enter a valid email address.</span>
+    </div>
+  </div>
+  <div class="form-group" ng-class="{'has-error': (registerForm.pw.$invalid || (registerForm.pw2.$dirty && registerForm.pw2.$error.passwordEqual)) && registerForm.pw.$dirty}">
+    <label for="pw">Password</label>
+    <input type="password" ng-model="user.pw" class="form-control" name="pw" id="pw" placeholder="Password" required="required" />
+    <p class="text-danger">
+      <span ng-show="registerForm.pw.$dirty && registerForm.pw.$error.required">Please enter a password.</span>
+    </p>
+  </div>
+  <div class="form-group" ng-class="{'has-error': registerForm.pw2.$invalid && registerForm.pw2.$dirty}">
+    <label for="pw2">Password (repeat)</label>
+    <input type="password" ng-model="user.pw2" class="form-control" name="pw2" id="pw2" placeholder="Password (repeat)" required="required" password-equal="user.pw" />
+    <p class="text-danger">
+      <span ng-show="registerForm.pw2.$dirty && registerForm.pw2.$error.required">Please repeat your password.</span>
+      <span ng-show="registerForm.pw.$dirty && registerForm.pw2.$dirty && registerForm.pw2.$error.passwordEqual">The passwords are not equal.</span>
+    </p>
+  </div>
+  <button ng-click="register(user)" ng-disabled="registerForm.$invalid" class="btn btn-primary">Register</button>
+</form>
