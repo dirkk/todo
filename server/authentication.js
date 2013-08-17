@@ -9,7 +9,6 @@ module.exports = {
       if (!user) { return res.send(400, {message: 'Bad username or password'}); }
 
       req.logIn(user, function(err) {
-        console.log("login maybe with error");
         if (err) { return next(err); }
         return res.send(200);
       });
@@ -20,7 +19,7 @@ module.exports = {
 
   logout: function(req, res) {
     req.logout();
-    return res.send(200);
+    return res.redirect("/");
   },
 
   // NOTE: Need to protect all API calls (other than login/logout/signup) with this check

@@ -17,6 +17,7 @@ MongoClient.connect("mongodb://localhost:27017/todoApp", function(err, db) {
     console.dir(err);
   }
 
+  var ObjectId = db.bson_serializer.ObjectID;
   db.createCollection('user', function(err, collection) {});
   db.createCollection('todos', function(err, collection) {});
 
@@ -35,13 +36,11 @@ MongoClient.connect("mongodb://localhost:27017/todoApp", function(err, db) {
   app.use(passport.session());
 
   passport.serializeUser(function(user, done) {
-    console.log(user);
-    done(null, user.user);
+    done(null, user._id);
   });
 
   passport.deserializeUser(function(id, done) {
-    console.log("deserialize");
-    db.collection('user').findOne({"user": id}, function(err, item) {
+    db.collection('user').findOne({"_id": ObjectId(id)}, function(err, item) {
       done(err, item);
     });
   });
@@ -63,8 +62,12 @@ MongoClient.connect("mongodb://localhost:27017/todoApp", function(err, db) {
           function(err, result) {
             if (err)
               res.send(400, err);
-            else
-              res.send(200);
+            else {
+              req.logIn(u, function(err) {
+                if (err) { return next(err); }
+                return res.send(200);
+              });
+            }
         });
       }
     });
@@ -103,14 +106,64 @@ MongoClient.connect("mongodb://localhost:27017/todoApp", function(err, db) {
   app.post('/login', Authentication.login);
   app.get('/logout', Authentication.logout);
 
-
+  // list all todos for the logged-in user
   app.get('/todos', Authentication.ensureAuthenticated, function(req, res, next) {
-    return res.json([{"task": "sdyj", "prio": 4}]);
+    db.collection('todos').find({"user_id": req.session.passport.user}).toArray(function(err, item) {
+      return res.json(item);
+    });
   })
 
-  // mock get data routes
-  app.get('/hello/:who', Authentication.ensureAuthenticated, function(req, res, next) {
-    return res.json({hello: req.params.who});
+  // add a new todo
+  // user has to be logged-in
+  app.post('/todo/add', Authentication.ensureAuthenticated, function(req, res, next) {
+    var n = {
+      "task": req.body.task,
+      "prio": req.body.prio,
+      "user_id": req.session.passport.user
+    };
+    db.collection('todos').insert(n, {w:1},
+      function(err, result) {
+        if (err)
+          res.send(400, err);
+        else
+          res.send(200);
+    });
+  });
+
+  // edit one specific toDo
+  // user has to be logged-in and can just modify his own documents
+  app.put('/todo/edit/:id', Authentication.ensureAuthenticated, function(req, res, next) {
+    var n = {
+      "_id": ObjectId(req.params.id),
+      "user_id": req.session.passport.user
+    };
+    var u = {
+      "task": req.body.task,
+      "prio": req.body.prio,
+    };
+    db.collection('todos').update(n, {$set: u}, {w:1},
+      function(err, result) {
+        if (err)
+          res.send(400, err);
+        else
+          res.send(200);
+    });
+  });
+
+  // delete one specific toDo
+  // user has to be logged-in and can just modify his own documents
+  app.delete('/todo/delete/:id', Authentication.ensureAuthenticated, function(req, res, next) {
+    var n = {
+      "_id": ObjectId(req.params.id),
+      "user_id": req.session.passport.user
+    };
+    db.collection('todos').remove(n, {w:1},
+      function(err, result) {
+        if (err)
+          res.send(400, err);
+        else
+          res.send(200);
+    });
   });
 
 });

@@ -1,45 +1,66 @@
+<div class="pull-right">
+  <a href="/logout">Logout</a>
+</div>
 <h2>ToDos</h2>
-<table class="table table-striped">
-  <tr>
-    <th ng-click="order = 'task'; sort = !sort">Task</th>
-    <th ng-click="order = 'prio'; sort = !sort">Prio</th>
-    <th></th>
-    <th></th>
-  </tr>
-  <tr ng-repeat="todo in todos | orderBy: order:sort">
-    <td>
-      <span ng-show="!todo.edit">{{todo.task}}</span>
-      <span ng-show="todo.edit">
-        <input type="text" class="form-control" ng-model="todo.task" />
-      </span>
-    </td>
-    <td>
-      <span ng-show="!todo.edit">{{todo.prio}}</span>
-      <span ng-show="todo.edit">
-        <input type="number" class="form-control" ng-model="todo.prio" />
-      </span>
-    </td>
-    <td>
-      <span ng-show="!todo.edit">
-        <a ng-click="edit(todo)"><span class="glyphicon glyphicon-pencil" /></a>
-      </span>
-      <span ng-show="todo.edit">
-        <a ng-click="save(todo)"><span class="glyphicon glyphicon-ok" /></a>
-      </span>
-    </td>
-    <td>
-      <a ng-click="delete(todo)"><span class="glyphicon glyphicon-remove" /></a>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <input type="text" class="form-control" ng-model="newtodo.task" />
-    </td>
-    <td>
-      <input type="number" class="form-control" ng-model="newtodo.prio" />
-    </td>
-    <td colspan="2">
-      <a ng-click="add(newtodo)"><span class="glyphicon glyphicon-plus" /></a>
-    </td>
-  </tr>
-</table>
+<form name="editForm" novalidate="">
+<div class="striped">
+  <div class="row header">
+    <span>
+      <div class="col-xs-8" ng-click="order = 'task'; sort = !sort">Task</div>
+      <div class="col-xs-4" ng-click="order = 'prio'; sort = !sort">Prio</div>
+    </span>
+  </div>
+  <div class="row" ng-repeat="todo in todos | orderBy: order:sort">
+    <span ng-show="!todo.edit">
+      <div class="col-xs-8">
+        {{todo.task}}
+      </div>
+      <div class="col-xs-2">
+        {{todo.prio}}
+      </div>
+      <div class="col-xs-1">
+        <button class="btn btn-primary" ng-click="edit(todo)">Edit</button>
+      </div>
+      <div class="col-xs-1" style="text-align: center;">
+        <a ng-click="delete(todo)"><span class="glyphicon glyphicon-remove" /></a>
+      </div>
+    </span>
+    <span ng-show="todo.edit">
+      <ng-form class="form" role="form" name="subForm" novalidate="">
+        <div class="col-xs-8">
+          <div class="form-group" ng-class="{'has-error': subForm.task.$invalid}">
+            <label class="sr-only" for="task">Task</label>
+            <input name="task" type="text" class="form-control" ng-model="todo.task" ng-required="true" ng-maxlength="255" />
+          </div>
+        </div>
+        <div class="col-xs-2">
+          <div class="form-group" ng-class="{'has-error': subForm.prio.$invalid}">
+            <label class="sr-only" for="prio">Prio</label>
+            <input name="prio" type="number" class="form-control" ng-model="todo.prio" ng-required="true" min="1" max="1000" />
+          </div>
+        </div>
+        <div class="col-xs-1">
+          <button class="btn btn-primary" ng-click="save(todo)" ng-disabled="subForm.$invalid">Save</button>
+        </div>
+        <div class="col-xs-1" style="text-align: center;">
+          <a ng-click="delete(todo)"><span class="glyphicon glyphicon-remove" /></a>
+        </div>
+      </form>
+    </span>
+  </div>
+</div>
+</form>
+
+<form class="form-inline" role="form" name="addForm" novalidate="">
+  <div class="form-group" ng-class="{'has-error': addForm.addTask.$error.maxlength}">
+    <label class="sr-only" for="addTask">Task</label>
+    <input type="text" class="form-control" id="addTask" name="addTask" placeholder="New task" ng-model="newtodo.task" ng-required="true" ng-maxlength="255" />
+  </div>
+  <div class="form-group" ng-class="{'has-error': addForm.addPrio.$invalid}">
+    <label class="sr-only" for="addPrio">Prio</label>
+    <input name="addPrio" id="addPrio" type="number" class="form-control" ng-model="newtodo.prio" ng-required="true" min="1" max="1000" />
+  </div>
+  <div class="form-group">
+    <button class="btn btn-primary" ng-click="add(newtodo)" ng-disabled="addForm.$invalid">Add</button>
+  </div>
+</form>

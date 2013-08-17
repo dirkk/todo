@@ -31,8 +31,7 @@ angular.module('todoApp')
       var r = this.registerForm;
       $http.post('/signup', user)
         .success(function(resp) {
-          $scope.errorUserExists = false;
-          r.$setPristine();
+          $location.path("/todo");
         })
         .error(function(resp, status, headers, config) {
           $scope.errorUserExists = true;
@@ -47,7 +46,7 @@ angular.module('todoApp')
           $location.path('todo')
         })
         .error(function(resp, status, headers, config) {
-          $scope.errorMsg = resp;
+          $scope.errorMsg = resp.message;
           l.$setPristine();
         });
     };
@@ -59,28 +58,52 @@ angular.module('todoApp')
         $scope.todos = resp;
       })
       .error(function(resp, status, headers, config) {
-        console.log("Could not load ToDos.");
+        if (status == 401) {
+          $location.path("/");
+        } else {
+          console.log("Could not load ToDos.");
+        }
       });
     $scope.order = 'prio';
     $scope.sort = true;
+    $scope.newtodo = { prio: 1 };
 
     $scope.edit = function(t) {
       t.edit = true;
     };
 
     $scope.save = function(t) {
-      t.edit = false;
+      $http.put('/todo/edit/' + t._id, {"task": t.task, "prio": t.prio})
+        .success(function(resp) {
+          t.edit = false;
+        })
+        .error(function(resp, status, headers, config) {
+          t.edit = false;
+          console.log("Could not edit this ToDo.");
+        });
     };
 
     $scope.delete = function(t) {
-      for (var i = $scope.todos.length - 1; i >= 0; i--) {
-        if (t.$$hashKey == $scope.todos[i].$$hashKey)
-          $scope.todos.splice(i, 1);
-      }
+      $http.delete('/todo/delete/' + t._id)
+        .success(function(resp) {
+          for (var i = $scope.todos.length - 1; i >= 0; i--) {
+            if (t._id == $scope.todos[i]._id)
+              $scope.todos.splice(i, 1);
+          }
+        })
+        .error(function(resp, status, headers, config) {
+          console.log("Could not delete this ToDo.");
+        });
     };
 
     $scope.add = function(t) {
-      $scope.todos.push(t);
-      $scope.newtodo = {};
+      $http.post('/todo/add', t)
+        .success(function(resp) {
+          $scope.todos.push(t);
+          $scope.newtodo = {prio: 1};
+        })
+        .error(function(resp, status, headers, config) {
+          console.log("Could not add this ToDo.");
+        });
     };
   });

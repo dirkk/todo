@@ -5,7 +5,7 @@ body {
 }
 
 a:hover {
-  text-decoration: none;
+  text-decoration: none !important;
 }
 
 .content {
@@ -15,4 +15,22 @@ a:hover {
   -webkit-border-radius: 6px;
   -moz-border-radius: 6px;
   border-radius: 6px;
+}
+
+.striped {
+  margin: 20px;
+}
+
+.striped > div.header > span >div {
+  font-weight: bold;
+  background-color: #f9f9f9;
+}
+
+.striped > div.row > span > div,
+.striped > div.row > span > form > div {
+  min-height: 51px;
+  padding: 8px;
+  line-height: 1.428571429;
+  vertical-align: top;
+  border-top: 1px solid #dddddd;
 }
