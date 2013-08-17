@@ -7,10 +7,10 @@ Simple ToDo management app with a user-functionalitiy (registration, login, logo
 
 You will need the following tools to build and run this app:
 
- * Node
- * Node Package manager
- * Bower
- * Grunt
+ * [Node](http://nodejs.org/)
+ * [Node Package manager](https://npmjs.org/)
+ * [Bower](http://bower.io/)
+ * [Grunt](http://gruntjs.com/)
 
 # How to run it
 
