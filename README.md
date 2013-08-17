@@ -1,7 +1,7 @@
 ToDo App
 =============================
 
-Simple ToDo management app with a user-functionalitiy (registration, login, logout) and a mangement of toDos per user (add, edit, delete of toDos)
+Simple user-based ToDo management app. A user can be registered, can login and logout. Each user can then manege his/her toDos (add, edit, delete).
 
 # Requirements
 
@@ -19,6 +19,10 @@ You will need the following tools to build and run this app:
     npm install
     bower install
     grunt server
+
+# Architecture
+
+The client interface is writte in [Angular.Js](http://angularjs.org/) and designed using [Bootstrap 3](http://getbootstrap.com/). The server-side uses [node.js](http://nodejs.org/) and [express](http://expressjs.com/) as web application framework. [MongoDB](http://www.mongodb.org/) is used as database.
 
 # API
 
