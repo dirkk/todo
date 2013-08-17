@@ -34,3 +34,12 @@ a:hover {
   vertical-align: top;
   border-top: 1px solid #dddddd;
 }
+
+.add-form {
+  padding-left: 23px !important;
+}
+
+.add-form > div {
+  padding-left: 0px !important;
+  padding-right: 16px !important;
+}
