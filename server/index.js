@@ -73,13 +73,6 @@ MongoClient.connect("mongodb://localhost:27017/todoApp", function(err, db) {
     });
   });
 
-  // Add csrf support
-  app.use(express.csrf({value: Authentication.csrf}));
-  app.use(function(req, res, next) {
-     res.cookie('XSRF-TOKEN', req.session._csrf);
-     next();
-  });
-
   // setup passport authentication
   //app.use(flash());
   passport.use(new LocalStrategy({
