@@ -15,6 +15,7 @@
       <span ng-show="loginForm.pw.$dirty && loginForm.pw.$error.required">Please enter a password.</span>
     </p>
   </div>
+  <div class="alert alert-danger" ng-show="errorMsg && loginForm.$pristine">{{errorMsg}}</div>
   <button ng-click="login(user)" ng-disabled="loginForm.$invalid" class="btn btn-primary">Sign in</button>
   <a href="#/register" class="btn btn-default">Register</a>
 </form>

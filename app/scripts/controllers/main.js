@@ -26,22 +26,41 @@ angular.module('todoApp')
     }
   })
 
-  .controller('UserCtrl', function ($scope, $location) {
+  .controller('UserCtrl', function ($scope, $location, $http) {
     $scope.register = function(user) {
-
+      var r = this.registerForm;
+      $http.post('/signup', user)
+        .success(function(resp) {
+          $scope.errorUserExists = false;
+          r.$setPristine();
+        })
+        .error(function(resp, status, headers, config) {
+          $scope.errorUserExists = true;
+          r.$setPristine();
+        });
     };
 
     $scope.login = function(user) {
-      console.log(user);
-      // check login data
-      if (true) {
-        $location.path('todo')
-      }
+      var l = this.loginForm;
+      $http.post('/login', user)
+        .success(function(resp) {
+          $location.path('todo')
+        })
+        .error(function(resp, status, headers, config) {
+          $scope.errorMsg = resp;
+          l.$setPristine();
+        });
     };
   })
 
-  .controller('ToDoCtrl', function ($scope, $location) {
-    $scope.todos = [{task: "one", prio: 1}, {task: "kjdsf", prio: 21}, {task: "whatever man", prio: 11}];
+  .controller('ToDoCtrl', function ($scope, $location, $http) {
+    $http.get('/todos')
+      .success(function(resp) {
+        $scope.todos = resp;
+      })
+      .error(function(resp, status, headers, config) {
+        console.log("Could not load ToDos.");
+      });
     $scope.order = 'prio';
     $scope.sort = true;
 
